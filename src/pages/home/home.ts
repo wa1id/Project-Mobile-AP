@@ -9,13 +9,13 @@ import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-sca
 export class HomePage {
 
   options: BarcodeScannerOptions;
-
+  results: {};
   constructor(private barcode: BarcodeScanner, public navCtrl: NavController) {
 
   }
 
   async scanBarcode(){
-    const results = await this.barcode.scan();
-    console.log(results);
+    this.results = await this.barcode.scan();
+    console.log(this.results);
   }
 }

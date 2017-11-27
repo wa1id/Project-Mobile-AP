@@ -5,5 +5,17 @@
 </ion-header>
 
 <ion-content padding>
+  <div *ngIf="results">
+    <p>
+      {{ results.format }}
+    </p>
+    <p>
+      {{ results.cancelled }}
+    </p>
+    <p>
+      {{ results.text }}
+    </p>
+  </div>
  <button ion-button (click)="scanBarcode()">Scan studentenkaart hier</button>
+
 </ion-content>
