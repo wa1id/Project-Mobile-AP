@@ -13,7 +13,10 @@
       {{ results.cancelled }}
     </p>
     <p>
-      {{ results.text }}
+      Studentennummer: {{  results.text.slice(5,-2) }}
+    </p>
+    <p>
+
     </p>
   </div>
  <button ion-button (click)="scanBarcode()">Scan studentenkaart hier</button>
