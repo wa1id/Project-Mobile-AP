@@ -17,7 +17,7 @@ export class HomePage {
   naam: string;
   voornaam: string;
   data: {};
-  constructor(private barcode: BarcodeScanner, public navCtrl: NavController, public http: Http) {
+  constructor(private barcode: BarcodeScanner, public navCtrl: NavController, private http: Http, private storage: Storage) {
 
   }
 
@@ -33,16 +33,27 @@ export class HomePage {
                 console.log(data[i].voornaam);
                 this.naam = data[i].naam;
                 this.voornaam =data[i].voornaam;
+
+                this.storage.set(data[i]['pointer student'], data[i].voornaam + " " + data[i].naam);
               }
             }
         });
-    //storage.set("studentnr", results.text.slice(5,-2));
   }
 
-  // async getStorage() {
-  //   storage.get("studentnr").then((val) => {
-  //     studenten.push(val);
-  //     console.log(studenten);
-  // });
-  //}
+  async getStorage() {
+    this.storage.keys().then((val) => {
+      console.log(val);
+    });
+
+    this.storage.forEach( (value, key) => {
+       console.log("This is the value", value);
+       console.log("from the key", key);
+       });
+  }
+
+  async clearStorage() {
+    this.storage.clear().then((val) => {
+      console.log("STORAGE CLEARED");
+    });
+  }
 }
