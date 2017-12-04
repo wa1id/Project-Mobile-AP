@@ -14,7 +14,8 @@ export class HomePage {
 
   options: BarcodeScannerOptions;
   results: {};
-  studenten: {};
+  naam: string;
+  voornaam: string;
   data: {};
   constructor(private barcode: BarcodeScanner, public navCtrl: NavController, public http: Http) {
 
@@ -30,6 +31,8 @@ export class HomePage {
             for (var i = 0; i < data.length; i++) {
               if (data[i]['pointer student'] == this.results['text'].slice(5,-2)) {
                 console.log(data[i].voornaam);
+                this.naam = data[i].naam;
+                this.voornaam =data[i].voornaam;
               }
             }
         });
