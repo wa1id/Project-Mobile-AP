@@ -7,10 +7,13 @@
 <ion-content padding>
   <div *ngIf="results">
     <p>
-      Studentennummer: {{  results.text.slice(5,-2) }}
+      Studentennummer: {{ results.text.slice(5,-2) }}
     </p>
     <p>
-
+      Naam: 
+    </p>
+    <p>
+      Voornaam:
     </p>
   </div>
  <button ion-button (click)="scanBarcode()">Scan studentenkaart hier</button>

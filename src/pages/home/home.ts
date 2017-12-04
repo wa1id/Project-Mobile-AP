@@ -23,9 +23,15 @@ export class HomePage {
   async scanBarcode(){
     this.results = await this.barcode.scan();
     console.log(this.results);
+
     this.http.get('studentenrs.json').map(res => res.json()).subscribe(data => {
             this.data = data;
-            console.log(data);
+
+            for (var i = 0; i < data.length; i++) {
+              if (data[i]['pointer student'] == this.results['text'].slice(5,-2)) {
+                console.log(data[i].voornaam);
+              }
+            }
         });
     //storage.set("studentnr", results.text.slice(5,-2));
   }
