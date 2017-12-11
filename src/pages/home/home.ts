@@ -25,7 +25,7 @@ export class HomePage {
     this.results = await this.barcode.scan();
     console.log(this.results);
 
-    this.http.get('studentenrs.json').map(res => res.json()).subscribe(data => {
+    this.http.get('assets/data/studentenrs.json').map(res => res.json()).subscribe(data => {
             this.data = data;
 
             for (var i = 0; i < data.length; i++) {
