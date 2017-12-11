@@ -1,6 +1,6 @@
 {
   "name": "ScanApp",
-  "app_id": "",
+  "app_id": "6e557bbd",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
