@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-scanner';
 import { Storage } from '@ionic/storage';
 import { Http } from '@angular/http';
+import { Events } from 'ionic-angular';
 
 import 'rxjs/add/operator/map'
 
@@ -17,7 +18,7 @@ export class HomePage {
   naam: string;
   voornaam: string;
   data: {};
-  constructor(private barcode: BarcodeScanner, public navCtrl: NavController, private http: Http, private storage: Storage) {
+  constructor(private barcode: BarcodeScanner, public navCtrl: NavController, private http: Http, private storage: Storage, private events: Events) {
 
   }
 
@@ -25,6 +26,12 @@ export class HomePage {
     this.results = await this.barcode.scan();
     console.log(this.results);
 
+    //Totale keys opslaan in event om te gebruiken in Studenten Tab
+    this.storage.length().then((val) => {
+      this.events.publish("storageLength", val+1);
+    });
+
+    //studentennummers doorlopen in json en zoeken naar gescande nummer -> naam opslaan
     this.http.get('assets/data/studentenrs.json').map(res => res.json()).subscribe(data => {
             this.data = data;
 
@@ -53,6 +60,7 @@ export class HomePage {
 
   async clearStorage() {
     this.storage.clear().then((val) => {
+      this.events.publish("storageLength", 0);
       console.log("STORAGE CLEARED");
     });
   }
