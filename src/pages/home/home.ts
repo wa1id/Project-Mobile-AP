@@ -18,6 +18,7 @@ export class HomePage {
   naam: string;
   voornaam: string;
   data: {};
+
   constructor(private barcode: BarcodeScanner, public navCtrl: NavController, private http: Http, private storage: Storage, private events: Events) {
 
   }
@@ -25,11 +26,6 @@ export class HomePage {
   async scanBarcode(){
     this.results = await this.barcode.scan();
     console.log(this.results);
-
-    //Totale keys opslaan in event om te gebruiken in Studenten Tab
-    this.storage.length().then((val) => {
-      this.events.publish("storageLength", val+1);
-    });
 
     //studentennummers doorlopen in json en zoeken naar gescande nummer -> naam opslaan
     this.http.get('assets/data/studentenrs.json').map(res => res.json()).subscribe(data => {
@@ -45,6 +41,11 @@ export class HomePage {
               }
             }
         });
+
+        //Totale keys opslaan in event om te gebruiken in Studenten Tab
+        this.storage.length().then((val) => {
+          this.events.publish("storageLength", val);
+        });
   }
 
   async getStorage() {
@@ -53,8 +54,8 @@ export class HomePage {
     });
 
     this.storage.forEach( (value, key) => {
-       console.log("This is the value", value);
-       console.log("from the key", key);
+       console.log("This is the value: ", value);
+       console.log("from the key: ", key);
        });
   }
 

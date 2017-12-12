@@ -13,11 +13,6 @@
     </p>
   </div>
   <ion-list>
-    <ion-item>
-      <ion-icon name="ionic" item-start></ion-icon>
-      <div>
-
-      </div>
-    </ion-item>
+    <ion-item *ngFor="let s of studenten; let i = index">{{i+1}}. {{ s }}</ion-item>
   </ion-list>
 </ion-content>
