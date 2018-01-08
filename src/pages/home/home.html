@@ -7,7 +7,7 @@
 <ion-content padding>
   <div *ngIf="results">
     <p>
-      Studentennummer: {{ results.text.slice(6,-2) }}
+      Studentennummer: {{ results.text.slice(5,-2) }}
     </p>
     <p>
       Naam: {{ naam }}
@@ -17,6 +17,7 @@
     </p>
   </div>
  <button ion-button (click)="scanBarcode()">Scan studentenkaart hier</button>
+ <button ion-button (click)="exportEmail()">Export Email</button>
  <button ion-button (click)="getStorage()">getStorage</button>
  <button ion-button (click)="clearStorage()">clearStorage</button>
 </ion-content>

@@ -4,6 +4,7 @@ import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-sca
 import { Storage } from '@ionic/storage';
 import { Http } from '@angular/http';
 import { Events } from 'ionic-angular';
+import { EmailComposer } from '@ionic-native/email-composer';
 
 import 'rxjs/add/operator/map'
 
@@ -18,8 +19,17 @@ export class HomePage {
   naam: string;
   voornaam: string;
   data: {};
+  studenten: Array<string> = [];
 
-  constructor(private barcode: BarcodeScanner, public navCtrl: NavController, private http: Http, private storage: Storage, private events: Events) {
+  email = {
+    to: 'wyachou95@gmail.com',
+    subject: 'Aanwezigheid Studentenlijst',
+    body:  '',
+    isHtml: true
+  };
+
+  constructor(private barcode: BarcodeScanner, public navCtrl: NavController, private http: Http,
+    private storage: Storage, private events: Events, private emailComposer: EmailComposer) {
 
   }
 
@@ -31,7 +41,7 @@ export class HomePage {
             this.data = data.studenten;
 
             for (var i = 0; i < data.studenten.length; i++) {
-              if (data.studenten[i]['pointer student'] == this.results['text'].slice(6,-2)) { //zoeken in array naar juiste student
+              if (data.studenten[i]['pointer student'] == this.results['text'].slice(5,-2)) { //zoeken in array naar juiste student
 
                 //Naam en voornaam tonen op het scherm nadat er werd gescant
                 this.naam = data.studenten[i].naam;
@@ -47,6 +57,16 @@ export class HomePage {
         this.storage.length().then((val) => {
           this.events.publish("storageLength", val);
         });
+  }
+
+  //Export via Email
+  async exportEmail() {
+  this.storage.forEach((value, key) => {
+      this.studenten.push(value);
+      this.email.body = 'test ' + value;
+     });
+
+    this.emailComposer.open(this.email);
   }
 
   //Knop voor te debuggen
