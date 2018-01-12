@@ -24,7 +24,7 @@ export class HomePage {
   email = {
     to: 'wyachou95@gmail.com',
     subject: 'Aanwezigheid Studentenlijst',
-    body:  '',
+    body: '',
     isHtml: true
   };
 
@@ -33,52 +33,55 @@ export class HomePage {
 
   }
 
-  async scanBarcode(){
+  async scanBarcode() {
     this.results = await this.barcode.scan();
 
     //studentennummers doorlopen in json en zoeken naar gescande nummer -> naam opslaan
     this.http.get('https://saiorxiii.cloudant.com/test/39cdb1ffdb892dd9d71940fa251ccc89').map(res => res.json()).subscribe(data => {
-            this.data = data.studenten;
+      this.data = data.studenten;
 
-            for (var i = 0; i < data.studenten.length; i++) {
-              if (data.studenten[i]['pointer student'] == this.results['text'].slice(5,-2)) { //zoeken in array naar juiste student
+      for (var i = 0; i < data.studenten.length; i++) {
+        if (data.studenten[i]['pointer student'] == this.results['text'].slice(5, -2)) { //zoeken in array naar juiste student
 
-                //Naam en voornaam tonen op het scherm nadat er werd gescant
-                this.naam = data.studenten[i].naam;
-                this.voornaam =data.studenten[i].voornaam;
+          //Naam en voornaam tonen op het scherm nadat er werd gescant
+          this.naam = data.studenten[i].naam;
+          this.voornaam = data.studenten[i].voornaam;
 
-                //Naam en voornaam opslaan in storage
-                this.storage.set(data.studenten[i]['pointer student'], data.studenten[i].voornaam + " " + data.studenten[i].naam);
-              }
-            }
-        });
+          //Naam en voornaam opslaan in storage
+          this.storage.set(data.studenten[i]['pointer student'], data.studenten[i].voornaam + " " + data.studenten[i].naam);
+        }
+      }
+    });
 
-        //Totale keys opslaan in event om te gebruiken in Studenten Tab
-        this.storage.length().then((val) => {
-          this.events.publish("storageLength", val);
-        });
+    //Totale keys opslaan in event om te gebruiken in Studenten Tab
+    this.storage.length().then((val) => {
+      this.events.publish("storageLength", val);
+    });
   }
 
   //Export via Email
   async exportEmail() {
-  this.storage.forEach((value, key) => {
-      this.studenten.push(value);
-      this.email.body = 'test ' + value;
-     });
 
-    this.emailComposer.open(this.email);
+    this.email.body = ''; //clear email body, anders komen er duplicates wanneer er een 2de keer geëxport wordt
+
+    //Door elke value gaan in storage en die toevoegen in email body. Daarna email openen
+    this.storage.forEach((value, key, index) => {
+      this.email.body += index + '. ' + value + '<br/>';
+    }).then(() => {
+      this.emailComposer.open(this.email);
+    });
   }
 
-  //Knop voor te debuggen
+  //Knoppen voor te debuggen
   async getStorage() {
     this.storage.keys().then((val) => {
       console.log(val);
     });
 
-    this.storage.forEach( (value, key) => {
-       console.log("This is the value: ", value);
-       console.log("from the key: ", key);
-       });
+    this.storage.forEach((value, key) => {
+      console.log("This is the value: ", value);
+      console.log("from the key: ", key);
+    });
   }
 
   //Knop voor te debuggen. GEVAARLIJKE knop zonder driedubbele "Are you sure?" popup.
