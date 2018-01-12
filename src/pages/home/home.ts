@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage';
 import { Http } from '@angular/http';
 import { Events } from 'ionic-angular';
 import { EmailComposer } from '@ionic-native/email-composer';
+import { AlertController } from 'ionic-angular';
 
 import 'rxjs/add/operator/map'
 
@@ -22,14 +23,14 @@ export class HomePage {
   studenten: Array<string> = [];
 
   email = {
-    to: 'wyachou95@gmail.com',
+    to: '',
     subject: 'Aanwezigheid Studentenlijst',
     body: '',
     isHtml: true
   };
 
   constructor(private barcode: BarcodeScanner, public navCtrl: NavController, private http: Http,
-    private storage: Storage, private events: Events, private emailComposer: EmailComposer) {
+    private storage: Storage, private events: Events, private emailComposer: EmailComposer, private alertCtrl: AlertController) {
 
   }
 
@@ -64,12 +65,40 @@ export class HomePage {
 
     this.email.body = ''; //clear email body, anders komen er duplicates wanneer er een 2de keer geëxport wordt
 
-    //Door elke value gaan in storage en die toevoegen in email body. Daarna email openen
-    this.storage.forEach((value, key, index) => {
-      this.email.body += index + '. ' + value + '<br/>';
-    }).then(() => {
-      this.emailComposer.open(this.email);
+    //popup om te vragen naar emailadres
+    let alert = this.alertCtrl.create({
+      title: 'Email',
+      message: 'Naar welk email adres wilt u exporteren?',
+      inputs: [
+        {
+          name: 'toEmail',
+          placeholder: 'Email'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Open mail',
+          handler: data => {
+            console.log('Saved clicked');
+            this.email.to = data.toEmail;
+            //Door elke value gaan in storage en die toevoegen in email body. Daarna email openen
+            this.storage.forEach((value, key, index) => {
+              this.email.body += index + '. ' + value + '<br/>';
+            }).then(() => {
+              this.emailComposer.open(this.email);
+            });
+          }
+        }
+      ]
     });
+
+    alert.present();
   }
 
   //Knoppen voor te debuggen
