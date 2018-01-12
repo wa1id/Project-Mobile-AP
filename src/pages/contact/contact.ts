@@ -28,7 +28,7 @@ export class ContactPage {
     });
 
     //elke student uit storage halen en opslaan in array
-    this.storage.forEach( (value, key) => {
+    this.storage.forEach((value, key) => {
         this.studenten.push(value);
        });
   }
